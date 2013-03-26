@@ -8283,8 +8283,8 @@ wysihtml5.views.View = Base.extend(
         "body             { min-height: 100%; padding: 0; margin: 0; margin-top: -1px; padding-top: 1px; }",
         "._wysihtml5-temp { display: none; }",
         wysihtml5.browser.isGecko ?
-          "body.placeholder { color: graytext !important; }" : 
-          "body.placeholder { color: #a9a9a9 !important; }",
+            "body.placeholder { color: graytext !important; font-style: italic !important; }" :
+            "body.placeholder { color: #ccc !important; font-style: italic !important; }",
         "body[disabled]   { background-color: #eee !important; color: #999 !important; cursor: default !important; }",
         // Ensure that user see's broken images and can delete them
         "img:-moz-broken  { -moz-force-broken-image-icon: 1; height: 24px; width: 24px; }"
@@ -8532,6 +8532,11 @@ wysihtml5.views.View = Base.extend(
       }
     });
 
+    // --------- Proxy events ---------
+    dom.observe(element, ["keyup", "keydown", "keypress"], function(event) {
+      that.parent.fire(event.type, event).fire(event.type + ":composer", event);
+    });
+
     // --------- neword event ---------
     dom.observe(element, "keyup", function(event) {
       var keyCode = event.keyCode;
@@ -8753,7 +8758,7 @@ wysihtml5.views.Textarea = wysihtml5.views.View.extend(
          * Calling focus() or blur() on an element doesn't synchronously trigger the attached focus/blur events
          * This is the case for focusin and focusout, so let's use them whenever possible, kkthxbai
          */
-        events = wysihtml5.browser.supportsEvent("focusin") ? ["focusin", "focusout", "change"] : ["focus", "blur", "change"];
+        events = wysihtml5.browser.supportsEvent("focusin") ? ["focusin", "focusout", "change", "keyup", "keydown", "keypress"] : ["focus", "blur", "change", "keyup", "keydown", "keypress"];
     
     parent.observe("beforeload", function() {
       wysihtml5.dom.observe(element, events, function(event) {
@@ -9432,10 +9437,6 @@ wysihtml5.views.Textarea = wysihtml5.views.View.extend(
           this.toolbar = new wysihtml5.toolbar.Toolbar(this, this.config.toolbar);
         }
       });
-      
-      try {
-        console.log("Heya! This page is using wysihtml5 for rich text editing. Check out https://github.com/xing/wysihtml5");
-      } catch(e) {}
     },
     
     isCompatible: function() {
