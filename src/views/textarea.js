@@ -24,7 +24,7 @@ wysihtml5.views.Textarea = wysihtml5.views.View.extend(
     if (parse) {
       html = this.parent.parse(html);
     }
-    this.element.value = html;
+    $(this.element).val(html);
   },
   
   hasPlaceholderSet: function() {
