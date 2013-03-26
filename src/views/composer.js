@@ -38,7 +38,12 @@
       if (parse) {
         html = this.parent.parse(html);
       }
-      this.element.innerHTML = html;
+      try {
+        this.element.innerHTML = html;
+      }
+      catch (e) {
+        this.element.innerText = html;
+      }
     },
 
     show: function() {
