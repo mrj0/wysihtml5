@@ -24,7 +24,13 @@ wysihtml5.views.Textarea = wysihtml5.views.View.extend(
     if (parse) {
       html = this.parent.parse(html);
     }
-    $(this.element).val(html);
+    try {
+      $(this.element).val(html);
+    }
+    catch(e) {
+        // for some crazy reason this sometimes fails on Chrome. Fall back to just setting the value
+        this.element.value = html;
+    }
   },
   
   hasPlaceholderSet: function() {
